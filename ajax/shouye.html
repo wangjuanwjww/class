@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">	
+<script type="text/javascript" src="ajax.js"></script>
+<title></title>
+<style>
+	#tianjia{
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<div id="box">
+		<table border="1" width="800" align="center" id="table1">
+			<tr>
+				<th>id</th>
+				<th>姓名</th>
+				<th>性别</th>
+				<th>操作</th>
+			</tr>
+			<tbody id="table"></tbody>
+		</table>
+	
+	<div id="page" style="text-align:center;margin-top:100px">
+		<a href="">首页</a>
+		<a href="">上一页</a>
+		<a href="">下一页</a>
+		<a href="">尾页</a>
+	</div>
+	<input type="button" value="添加" id="add2">
+	</div>
+	
+	<div id="tianjia">
+
+		用户名：<input type="text" name="uname" id="uname">
+		密码：<input type="text" name="pwd" id="pwd">
+		性别：<input type="text" name="sex" id="sex">
+		<input type="button" value="添加" id="add">
+	</div>
+<script type="text/javascript">
+	//添加
+	
+	 var oAdd=document.getElementById('add');
+	
+	 oAdd.onclick=function(){
+	 	 var user=document.getElementById('uname');
+		 var user=user.value;
+		 var pwd=document.getElementById('pwd');
+		 var pwd=pwd.value;
+		 var sex=document.getElementById('sex');
+		 var sex=sex.value;
+
+	 	 //alert(user);
+	 	ajax({
+	 	method:"post",
+	 	url:"tianjia.php",
+	 	async:true,
+	 	data:{
+	 		"username":user,
+	 		"pwd":pwd,
+	 		"sex":sex,
+	 	},
+	 	success:success
+	 });
+	 	 function success(data){
+	 	var data = JSON.parse(data);
+	 	//alert(data);
+	 	if(data.error){
+
+	          // alert(data.msg);   
+	            var oBox=document.getElementById('box');
+	            var Tianjia=document.getElementById('tianjia');
+	            oBox.style.display='block';
+	            Tianjia.style.display='none';
+	       }else{
+	             //alert(data.msg);
+	                    
+	          }
+	                      
+	 }
+
+
+	 
+
+	 }
+	
+</script> 
+
+
+
+</body>
+	<script type="text/javascript">
+		var add2=document.getElementById('add2');
+		var Box=document.getElementById('box');
+		var Tianjia=document.getElementById('tianjia');
+		add2.onclick=function(){
+			Tianjia.style.display='block';
+			Box.style.display='none';
+		}
+
+	</script>
+
+</html>
+<script type="text/javascript">
+var oTable=document.getElementById('table');
+var aA=document.getElementsByTagName('a');
+ajax({
+	method:'get',
+	url:'cha.php',
+	async:true,
+	data:{page:1},
+	success:success
+});
+function success(data){
+	// alert(data);die;
+	oTable.innerHTML='';
+	var obj=JSON.parse(data);
+	//alert(obj.data2);
+	for(var i in obj.data2){
+		//alert(1111);
+		var oTr=document.createElement('tr');
+		var oTd1=document.createElement('td');
+		var oTd2=document.createElement('td');
+		oTd2.className='abc';
+
+
+
+
+		var oTd3=document.createElement('td');
+		var oTd4=document.createElement('td');
+		oTd1.innerHTML=obj.data2[i].id;
+		oTd2.innerHTML=obj.data2[i].username;
+		oTd3.innerHTML=obj.data2[i].sex;
+		
+
+		oTd4.innerHTML='<button style="margin-left:">删除</button>';
+		//alert(1111);
+
+		oTr.appendChild(oTd1);
+		oTr.appendChild(oTd2);
+		oTr.appendChild(oTd3);
+		oTr.appendChild(oTd4);
+
+		oTable.appendChild(oTr);
+var aBtn=document.getElementsByTagName('button');
+var abc=document.getElementsByClassName('abc');
+
+for(var j=0;j<abc.length;j++)
+
+{
+
+
+var oInp = document.createElement('input');
+
+       abc[j].ondblclick = function()
+		{
+           var val = this.innerHTML;
+			this.innerHTML = '';
+			this.appendChild(oInp);
+			oInp.value = val;
+			_this=this;
+			var newValue = oInp.value ;
+			//console.log(newValue);
+		};
+		aBtn[j].onclick=function(){
+			//alert(j);
+			var a=this.parentNode.parentNode.style.display='none';
+			var id2=this.parentNode.parentNode.firstChild.innerHTML;
+			// alert(id2);
+			ajax({
+				method:'post',
+				url:'delete.php',
+				async:true,
+				data:{id:id2},
+				success:success
+
+			});
+			function success(data){
+				
+			}
+		}
+		//alert(123);
+		oInp.onblur=function(){
+			//alert(oInp.value);
+			oInp.style.display='none';
+			var id=oInp.parentNode.previousSibling.innerHTML;
+			//alert(id);
+			 var username=oInp.value;
+			 _this.innerHTML=oInp.value;
+			ajax({
+				method:'post',
+				url:'update.php',
+				async:true,
+				data:{username:username,id:id},
+				success:success
+			});
+
+		};
+
+		function success(data){
+
+		}
+}
+	
+
+	}
+	var oPage=obj.allPage;
+	var i=0;
+	for(var name in oPage){
+		aA[i].href='javascript:text(\''+oPage[name]+'\')';
+		i++;
+	}
+}
+function text(url){
+	ajax({
+		method:'get',
+		url:url,
+		async:true,
+		success:success
+
+	});
+}
+var abc=document.getElementsByClassName('abc');
+// alert(abc.length);
+
+console.log(abc);
+
+	for(var i = 0;i<abc.length;i++)
+	{
+alert(22);
+
+		console.log(i);
+abc.onclick= function(){
+			
+	}
+
+	}
+	
+
+
+
+
+</script>
+ 
